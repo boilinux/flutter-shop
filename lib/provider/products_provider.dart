@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../models/product.dart';
+import 'product.dart';
 import '../models/dummy_products.dart';
 
 class ProductsProvider with ChangeNotifier {
@@ -8,6 +8,10 @@ class ProductsProvider with ChangeNotifier {
 
   List<Product> get items {
     return [..._items];
+  }
+
+  Product findById(String id) {
+    return _items.firstWhere((element) => element.id == id);
   }
 
   void addProduct() {

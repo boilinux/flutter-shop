@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/products_provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   static const routeName = '/product-details-screen';
@@ -6,9 +9,13 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = ModalRoute.of(context)!.settings.arguments as Map;
+    final products = Provider.of<ProductsProvider>(
+      context,
+      listen: false,
+    ).findById(data['id']);
     return Scaffold(
       appBar: AppBar(
-        title: Text(data['title']),
+        title: Text(products.title),
       ),
       // body: GridView.builder(
       //   padding: const EdgeInsets.all(10),
