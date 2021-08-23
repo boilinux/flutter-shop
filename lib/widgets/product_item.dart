@@ -1,8 +1,10 @@
+import 'package:app_shop/provider/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/product_detail_screen.dart';
 import '../provider/product.dart';
+import '../provider/cart.dart';
 
 class ProductItem extends StatelessWidget {
   // final data;
@@ -11,6 +13,10 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _product = Provider.of<Product>(
+      context,
+      listen: false,
+    );
+    final _cart = Provider.of<Cart>(
       context,
       listen: false,
     );
@@ -34,7 +40,8 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black54,
           leading: ConsumerProductFavorite(product: _product),
           trailing: IconButton(
-            onPressed: null,
+            onPressed: () =>
+                _cart.addItem(_product.id, _product.price, _product.title),
             icon: Icon(
               Icons.shopping_bag,
               color: Theme.of(context).accentColor,
