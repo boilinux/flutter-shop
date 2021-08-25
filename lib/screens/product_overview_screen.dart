@@ -60,7 +60,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                     .pushNamed(CartScreen.routeName, arguments: {});
               },
               icon: Icon(
-                Icons.shopping_bag,
+                Icons.shopping_cart,
                 color: Colors.white,
               ),
             ),

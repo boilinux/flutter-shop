@@ -43,7 +43,7 @@ class ProductItem extends StatelessWidget {
             onPressed: () =>
                 _cart.addItem(_product.id, _product.price, _product.title),
             icon: Icon(
-              Icons.shopping_bag,
+              Icons.shopping_cart,
               color: Theme.of(context).accentColor,
             ),
           ),
