@@ -17,23 +17,42 @@ class ProductDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(products.title),
       ),
-      // body: GridView.builder(
-      //   padding: const EdgeInsets.all(10),
-      //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      //     crossAxisCount: 2,
-      //     childAspectRatio: 3 / 2,
-      //     crossAxisSpacing: 10,
-      //     mainAxisSpacing: 10,
-      //   ),
-      //   itemBuilder: (ctx, index) {
-      //     return ProductItem(data: {
-      //       'id': products[index].id,
-      //       'title': products[index].title,
-      //       'imageUrl': products[index].imageUrl,
-      //     });
-      //   },
-      //   itemCount: products.length,
-      // ),
+      body: SingleChildScrollView(
+        child: Column(children: [
+          Container(
+            height: 300,
+            width: double.infinity,
+            child: Image.network(
+              products.imageUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            '₱${products.price}',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            width: double.infinity,
+            child: Text(
+              products.description,
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
+          )
+        ]),
+      ),
     );
   }
 }
