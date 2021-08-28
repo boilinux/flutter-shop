@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'api',
-    'django.contrib.sites'
+    # 'django.contrib.sites'
 ]
 
 MIDDLEWARE = [
