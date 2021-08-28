@@ -18,7 +18,8 @@ class Product(models.Model):
     isfavorite = models.BooleanField(default=False)
 
     class Meta:
-        app_label = 'Product'
+        verbose_name = 'Product'
+        verbose_name_plural = 'Product'
 
     def __str__(self):
         return self.title
