@@ -17,8 +17,9 @@ class Product(models.Model):
     image = models.ImageField(upload_to='files/product', blank=True)
     isfavorite = models.BooleanField(default=False)
 
-    # class Meta:
-    #     app_label = 'Product'
+    class Meta:
+        verbose_name = 'product'
+        verbose_name_plural = 'product'
 
     def __str__(self):
         return self.title
