@@ -1,5 +1,7 @@
+import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 import 'product.dart';
 import '../models/dummy_products.dart';
@@ -35,6 +37,21 @@ class ProductsProvider with ChangeNotifier {
   // }
 
   void addProduct(Product product) {
+    final url = Uri.parse('http://127.0.0.1:9000/api/product');
+    http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader:
+            'Basic e44f82f4a96e529860dc04f46baa2c5cf19af864',
+      },
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'price': product.price,
+        'isFavorite': product.isFavorite,
+      }),
+    );
     final newProduct = Product(
       id: DateTime.now().toString(),
       title: product.title,

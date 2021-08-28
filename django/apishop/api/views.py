@@ -32,6 +32,7 @@ def registration_view(request):
 
 @api_view(['POST', 'GET'])
 @authentication_classes([TokenAuthentication])
+# @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def product(request):
     if request.method == 'POST':
