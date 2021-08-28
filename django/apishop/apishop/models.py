@@ -65,7 +65,8 @@ class MyUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['phone_number', 'full_name']
 
     class Meta:
-        app_label = 'MyUser'
+        verbose_name = 'MyUser'
+        verbose_name_plural = 'MyUser'
 
     def __str__(self):
         return self.email
