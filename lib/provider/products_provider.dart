@@ -36,18 +36,19 @@ class ProductsProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct(Product product) {
-    final url = Uri.parse('http://127.0.0.1:9000/api/product');
-    http.post(
+  void addProduct(Product product) async {
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
+    await http.post(
       url,
       headers: {
         HttpHeaders.authorizationHeader:
-            'Bearer e44f82f4a96e529860dc04f46baa2c5cf19af864',
+            "Token aa44c3a429a1b582814c209590c5f50368b80cca",
+        HttpHeaders.contentTypeHeader: 'application/json',
       },
       body: json.encode({
         'title': product.title,
         'description': product.description,
-        'imageUrl': product.imageUrl,
+        'image': '',
         'price': product.price,
         'isFavorite': product.isFavorite,
       }),
