@@ -42,7 +42,7 @@ class ProductsProvider with ChangeNotifier {
       url,
       headers: {
         HttpHeaders.authorizationHeader:
-            'Basic e44f82f4a96e529860dc04f46baa2c5cf19af864',
+            'Bearer e44f82f4a96e529860dc04f46baa2c5cf19af864',
       },
       body: json.encode({
         'title': product.title,
