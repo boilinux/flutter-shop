@@ -97,9 +97,21 @@ class ProductsProvider with ChangeNotifier {
     // _items.insert(0, newProduct); // at the start of the list
   }
 
-  void updateProduct(String id, Product editProduct) {
+  Future<void> updateProduct(String id, Product editProduct) async {
     final prodIndex = _items.indexWhere((element) => element.id == id);
     if (prodIndex >= 0) {
+      final url =
+          Uri.parse("https://api01.stephenwenceslao.com/api/product/$id");
+      await http.put(
+        url,
+        headers: _headers,
+        body: json.encode({
+          'title': editProduct.title,
+          'description': editProduct.description,
+          'imageUrl': editProduct.imageUrl,
+          'price': editProduct.price,
+        }),
+      );
       _items[prodIndex] = editProduct;
       notifyListeners();
     }
