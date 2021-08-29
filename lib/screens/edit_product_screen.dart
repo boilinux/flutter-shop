@@ -88,7 +88,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
       setState(() {
         _isLoading = false;
       });
-      Navigator.of(context).pop();
     } else {
       try {
         await Provider.of<ProductsProvider>(context, listen: false)
@@ -110,14 +109,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
             );
           },
         );
-      } finally {
-        setState(() {
-          _isLoading = true;
-        });
-        Navigator.of(context).pop();
       }
     }
-    // Navigator.of(context).pop();
+    setState(() {
+      _isLoading = true;
+    });
+    Navigator.of(context).pop();
   }
 
   @override
