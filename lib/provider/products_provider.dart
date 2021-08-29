@@ -119,8 +119,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url =
-        Uri.parse("https://api01.stephenwenceslao.com/api/product/1$id");
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product/$id");
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
     final existingProduct = _items[existingProductIndex];
