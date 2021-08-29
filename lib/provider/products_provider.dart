@@ -37,27 +37,27 @@ class ProductsProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> addProduct(Product product) {
-    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
-    return http
-        .post(
-      url,
-      headers: {
-        HttpHeaders.authorizationHeader:
-            "Token c35816acb66f512cfe88b667edcd40c3e8be7a30",
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-      body: json.encode({
-        'title': product.title,
-        'description': product.description,
-        'imageUrl': product.imageUrl,
-        'price': product.price,
-        'isFavorite': product.isFavorite,
-      }),
-    )
-        .then((value) {
+  Future<void> addProduct(Product product) async {
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product1");
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          HttpHeaders.authorizationHeader:
+              "Token c35816acb66f512cfe88b667edcd40c3e8be7a30",
+          HttpHeaders.contentTypeHeader: 'application/json',
+        },
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'price': product.price,
+          'isFavorite': product.isFavorite,
+        }),
+      );
+
       final newProduct = Product(
-        id: json.decode(value.body)['id'].toString(),
+        id: json.decode(response.body)['id'].toString(),
         title: product.title,
         description: product.description,
         price: product.price,
@@ -65,10 +65,10 @@ class ProductsProvider with ChangeNotifier {
       );
       _items.add(newProduct);
       notifyListeners();
-    }).catchError((onError) {
-      inspect(onError);
-      throw onError;
-    });
+    } catch (error) {
+      inspect(error);
+      throw error;
+    }
     // _items.insert(0, newProduct); // at the start of the list
   }
 
