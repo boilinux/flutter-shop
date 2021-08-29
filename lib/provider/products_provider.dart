@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -36,34 +37,36 @@ class ProductsProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct(Product product) async {
+  Future<void> addProduct(Product product) {
     final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
-    await http.post(
+    return http
+        .post(
       url,
       headers: {
         HttpHeaders.authorizationHeader:
-            "Token aa44c3a429a1b582814c209590c5f50368b80cca",
+            "Token c35816acb66f512cfe88b667edcd40c3e8be7a30",
         HttpHeaders.contentTypeHeader: 'application/json',
       },
       body: json.encode({
         'title': product.title,
         'description': product.description,
-        'image': '',
+        'imageUrl': product.imageUrl,
         'price': product.price,
         'isFavorite': product.isFavorite,
       }),
-    );
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-    );
-    _items.add(newProduct);
+    )
+        .then((value) {
+      final newProduct = Product(
+        id: json.decode(value.body)['id'].toString(),
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    });
     // _items.insert(0, newProduct); // at the start of the list
-
-    notifyListeners();
   }
 
   void updateProduct(String id, Product editProduct) {
