@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'product.dart';
-import '../models/dummy_products.dart';
+// import '../models/dummy_products.dart';
 
 class ProductsProvider with ChangeNotifier {
-  List<Product> _items = dummy_products;
+  List<Product> _items = [];
 
   // var _showFavoritesOnly = false;
 
@@ -36,17 +36,42 @@ class ProductsProvider with ChangeNotifier {
   //   _showFavoritesOnly = false;
   //   notifyListeners();
   // }
+  var _headers = {
+    HttpHeaders.authorizationHeader:
+        "Token c35816acb66f512cfe88b667edcd40c3e8be7a30",
+    HttpHeaders.contentTypeHeader: 'application/json',
+  };
+
+  Future<void> fetchAndSetProducts() async {
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
+    try {
+      final response = await http.get(url, headers: _headers);
+      final extractedData = json.decode(response.body) as List;
+      final List<Product> loadedProducts = [];
+
+      extractedData.forEach((value) {
+        loadedProducts.add(Product(
+          id: value['id'].toString(),
+          title: value['title'],
+          description: value['description'],
+          price: double.parse(value['price']),
+          imageUrl: value['imageUrl'],
+          isFavorite: value['isfavorite'],
+        ));
+      });
+      _items = loadedProducts;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
 
   Future<void> addProduct(Product product) async {
-    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product1");
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
     try {
       final response = await http.post(
         url,
-        headers: {
-          HttpHeaders.authorizationHeader:
-              "Token c35816acb66f512cfe88b667edcd40c3e8be7a30",
-          HttpHeaders.contentTypeHeader: 'application/json',
-        },
+        headers: _headers,
         body: json.encode({
           'title': product.title,
           'description': product.description,
