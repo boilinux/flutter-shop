@@ -40,11 +40,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemBuilder: (ctx, i) {
-                return ord.OrderItem(orderData.orders[i]);
+          : RefreshIndicator(
+              onRefresh: () async {
+                await Provider.of<Orders>(context, listen: false)
+                    .fetchAndSetOrders();
               },
-              itemCount: orderData.orders.length),
+              child: ListView.builder(
+                  itemBuilder: (ctx, i) {
+                    return ord.OrderItem(orderData.orders[i]);
+                  },
+                  itemCount: orderData.orders.length),
+            ),
     );
   }
 }
