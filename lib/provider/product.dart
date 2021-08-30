@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import '../models/user_account.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,8 +24,7 @@ class Product with ChangeNotifier {
   });
 
   var _headers = {
-    HttpHeaders.authorizationHeader:
-        "Token c35816acb66f512cfe88b667edcd40c3e8be7a30",
+    HttpHeaders.authorizationHeader: UserAccount().userToken,
     HttpHeaders.contentTypeHeader: 'application/json',
   };
 
