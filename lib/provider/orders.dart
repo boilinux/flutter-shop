@@ -46,12 +46,12 @@ class Orders with ChangeNotifier {
         id: element['id'].toString(),
         amount: double.parse(element['total']),
         dateTime: DateTime.parse(element['datetime']),
-        products: (element['products'] as List).map((e) {
+        products: (json.decode(element['products']) as List).map((e) {
           return CartItem(
             id: e['id'],
             title: e['title'],
-            quantity: int.parse(e['quantity']),
-            price: double.parse(e['price']),
+            quantity: int.parse(e['quantity'].toString()),
+            price: double.parse(e['price'].toString()),
           );
         }).toList(),
       ));

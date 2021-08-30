@@ -50,6 +50,10 @@ class ProductsProvider with ChangeNotifier {
       final extractedData = json.decode(response.body) as List;
       final List<Product> loadedProducts = [];
 
+      // ignore: unnecessary_null_comparison
+      if (extractedData == null) {
+        return;
+      }
       extractedData.forEach((value) {
         loadedProducts.add(Product(
           id: value['id'].toString(),
