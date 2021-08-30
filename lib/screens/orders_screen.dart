@@ -5,52 +5,51 @@ import '../provider/orders.dart';
 import '../widgets/order_item.dart' as ord;
 import '../widgets/app_drawer.dart';
 
-class OrdersScreen extends StatefulWidget {
+class OrdersScreen extends StatelessWidget {
   static const routeName = '/orders';
 
   @override
-  _OrdersScreenState createState() => _OrdersScreenState();
-}
-
-class _OrdersScreenState extends State<OrdersScreen> {
-  var _isLoading = false;
-  @override
-  void initState() {
-    Future.delayed(Duration.zero).then((value) async {
-      setState(() {
-        _isLoading = true;
-      });
-      await Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final orderData = Provider.of<Orders>(context);
+    // final orderData = Provider.of<Orders>(context);
+    print('ayay');
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Your Orders'),
-      ),
-      drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : RefreshIndicator(
-              onRefresh: () async {
-                await Provider.of<Orders>(context, listen: false)
-                    .fetchAndSetOrders();
-              },
-              child: ListView.builder(
-                  itemBuilder: (ctx, i) {
-                    return ord.OrderItem(orderData.orders[i]);
+        appBar: AppBar(
+          title: Text('Your Orders'),
+        ),
+        drawer: AppDrawer(),
+        body: FutureBuilder(
+          future:
+              Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
+          builder: (ctx, data) {
+            if (data.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              if (data.error != null) {
+                // Do error handling here!
+                return Center(
+                  child: Text('An error occurred!'),
+                );
+              } else {
+                return Consumer<Orders>(
+                  builder: (ctx, orderData, _) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        await Provider.of<Orders>(context, listen: false)
+                            .fetchAndSetOrders();
+                      },
+                      child: ListView.builder(
+                          itemBuilder: (ctx, i) {
+                            return ord.OrderItem(orderData.orders[i]);
+                          },
+                          itemCount: orderData.orders.length),
+                    );
                   },
-                  itemCount: orderData.orders.length),
-            ),
-    );
+                );
+              }
+            }
+          },
+        ));
   }
 }
