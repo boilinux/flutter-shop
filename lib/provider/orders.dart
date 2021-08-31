@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 
 import 'cart.dart';
 import '../provider/product.dart';
-import '../models/user_account.dart';
+import 'auth.dart';
 
 class OrderItem {
   final String id;
@@ -31,7 +31,7 @@ class Orders with ChangeNotifier {
   }
 
   var _headers = {
-    HttpHeaders.authorizationHeader: UserAccount().userToken,
+    HttpHeaders.authorizationHeader: Auth().tempToken,
     HttpHeaders.contentTypeHeader: 'application/json',
   };
 

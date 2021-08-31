@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'product.dart';
 import '../models/http_exception.dart';
-import '../models/user_account.dart';
+import 'auth.dart';
 // import '../models/dummy_products.dart';
 
 class ProductsProvider with ChangeNotifier {
@@ -39,7 +39,7 @@ class ProductsProvider with ChangeNotifier {
   //   notifyListeners();
   // }
   var _headers = {
-    HttpHeaders.authorizationHeader: UserAccount().userToken,
+    HttpHeaders.authorizationHeader: Auth().tempToken,
     HttpHeaders.contentTypeHeader: 'application/json',
   };
 
