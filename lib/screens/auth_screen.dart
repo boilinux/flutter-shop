@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
+import '../models/http_exception.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -105,6 +106,24 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  void _showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: Text('An Error Occured!'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Okay'))
+            ],
+          );
+        });
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
@@ -114,14 +133,33 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
-      await Provider.of<Auth>(context, listen: false).signup({
-        'email': _authData['email'],
-        'password': _authData['password'],
-      });
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<Auth>(context, listen: false).login({
+          'email': _authData['email'],
+          'password': _authData['password'],
+        });
+      } else {
+        // Sign user up
+        await Provider.of<Auth>(context, listen: false).signup({
+          'email': _authData['email'],
+          'password': _authData['password'],
+        });
+      }
+    } on HttpException catch (error) {
+      var errorMessage =
+          'Authentication failed. Please check your email and password.';
+      if (error.toString().contains('exists')) {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.toString().contains('404')) {
+        errorMessage = 'This email address is not registered.';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      var errorMessage = 'Could not authenticate you. Please try again later.';
+
+      _showErrorDialog(errorMessage);
     }
     setState(() {
       _isLoading = false;
