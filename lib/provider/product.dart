@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+import './auth.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -24,7 +25,7 @@ class Product with ChangeNotifier {
   });
 
   var _headers = {
-    HttpHeaders.authorizationHeader: Auth().tempToken,
+    HttpHeaders.authorizationHeader: '',
     HttpHeaders.contentTypeHeader: 'application/json',
   };
 

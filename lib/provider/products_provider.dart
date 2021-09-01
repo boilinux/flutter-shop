@@ -11,6 +11,9 @@ import 'auth.dart';
 
 class ProductsProvider with ChangeNotifier {
   List<Product> _items = [];
+  final String authToken;
+
+  ProductsProvider(this.authToken, this._items);
 
   // var _showFavoritesOnly = false;
 
@@ -38,24 +41,27 @@ class ProductsProvider with ChangeNotifier {
   //   _showFavoritesOnly = false;
   //   notifyListeners();
   // }
-  var _headers = {
-    HttpHeaders.authorizationHeader: Auth().tempToken,
-    HttpHeaders.contentTypeHeader: 'application/json',
-  };
 
   Future<void> fetchAndSetProducts() async {
+    var _headers = {
+      HttpHeaders.authorizationHeader: authToken,
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
+    print(authToken);
     final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
     try {
       final response = await http.get(url, headers: _headers);
       final extractedData = json.decode(response.body) as List;
-      final List<Product> loadedProducts = [];
+      final List<Product>? loadedProducts = [];
 
       // ignore: unnecessary_null_comparison
       if (extractedData == null) {
         return;
       }
+      // inspect(extractedData);
       extractedData.forEach((value) {
-        loadedProducts.add(Product(
+        inspect(value);
+        loadedProducts!.add(Product(
           id: value['id'].toString(),
           title: value['title'],
           description: value['description'],
@@ -64,7 +70,7 @@ class ProductsProvider with ChangeNotifier {
           isFavorite: value['isfavorite'],
         ));
       });
-      _items = loadedProducts;
+      _items = loadedProducts!;
       notifyListeners();
     } catch (error) {
       throw error;
@@ -72,6 +78,10 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
+    var _headers = {
+      HttpHeaders.authorizationHeader: authToken,
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
     final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
     try {
       final response = await http.post(
@@ -103,6 +113,10 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> updateProduct(String id, Product editProduct) async {
+    var _headers = {
+      HttpHeaders.authorizationHeader: authToken,
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
     final prodIndex = _items.indexWhere((element) => element.id == id);
     if (prodIndex >= 0) {
       final url =
@@ -123,6 +137,10 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
+    var _headers = {
+      HttpHeaders.authorizationHeader: authToken,
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
     final url = Uri.parse("https://api01.stephenwenceslao.com/api/product/$id");
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);

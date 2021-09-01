@@ -27,8 +27,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => ProductsProvider(),
+        ChangeNotifierProxyProvider<Auth, ProductsProvider>(
+          create: (ctx) => ProductsProvider('', []),
+          update: (ctx, auth, previousProducts) =>
+              ProductsProvider(auth.token.toString(), previousProducts!.items),
         ),
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
@@ -37,25 +39,26 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Orders(),
         ),
       ],
-      child: MaterialApp(
-        title: 'MyShop',
-        theme: ThemeData(
-          // primaryColor: Colors.pink,
-          primarySwatch: Colors.pink,
-          accentColor: Colors.white,
-          buttonColor: Colors.blueAccent,
-          // errorColor: Colors.red,
-          fontFamily: 'Lato',
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'MyShop',
+          theme: ThemeData(
+            // primaryColor: Colors.pink,
+            primarySwatch: Colors.pink,
+            accentColor: Colors.white,
+            buttonColor: Colors.blueAccent,
+            // errorColor: Colors.red,
+            fontFamily: 'Lato',
+          ),
+          home: auth.isAuth ? ProductOverviewScreen() : AuthScreen(),
+          routes: {
+            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+            CartScreen.routeName: (ctx) => CartScreen(),
+            OrdersScreen.routeName: (ctx) => OrdersScreen(),
+            UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+            EditProductScreen.routeName: (ctx) => EditProductScreen(),
+          },
         ),
-        // home: ProductOverviewScreen(),
-        routes: {
-          '/': (ctx) => AuthScreen(),
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
-          EditProductScreen.routeName: (ctx) => EditProductScreen(),
-        },
       ),
     );
   }

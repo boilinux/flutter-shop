@@ -31,7 +31,7 @@ class Orders with ChangeNotifier {
   }
 
   var _headers = {
-    HttpHeaders.authorizationHeader: Auth().tempToken,
+    HttpHeaders.authorizationHeader: Auth().token!,
     HttpHeaders.contentTypeHeader: 'application/json',
   };
 
