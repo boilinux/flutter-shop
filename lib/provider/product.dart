@@ -24,17 +24,16 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  var _headers = {
-    HttpHeaders.authorizationHeader: '',
-    HttpHeaders.contentTypeHeader: 'application/json',
-  };
-
   void _setFavValue(bool newValue) {
     isFavorite = newValue;
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String token) async {
+    var _headers = {
+      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();

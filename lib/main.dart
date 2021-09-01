@@ -35,8 +35,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Orders(),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: (ctx) => Orders('', []),
+          update: (ctx, auth, previousOrder) =>
+              Orders(auth.token.toString(), previousOrder!.orders),
         ),
       ],
       child: Consumer<Auth>(
@@ -44,14 +46,23 @@ class MyApp extends StatelessWidget {
           title: 'MyShop',
           theme: ThemeData(
             // primaryColor: Colors.pink,
-            primarySwatch: Colors.pink,
+            primarySwatch: Colors.blue,
             accentColor: Colors.white,
             buttonColor: Colors.blueAccent,
             // errorColor: Colors.red,
             fontFamily: 'Lato',
           ),
-          home: auth.isAuth ? ProductOverviewScreen() : AuthScreen(),
           routes: {
+            '/': (ctx) {
+              Widget? homepage;
+              if (auth.isAuth) {
+                homepage = ProductOverviewScreen();
+              } else {
+                homepage = AuthScreen();
+              }
+
+              return homepage;
+            },
             ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
             CartScreen.routeName: (ctx) => CartScreen(),
             OrdersScreen.routeName: (ctx) => OrdersScreen(),

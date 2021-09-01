@@ -1,9 +1,10 @@
-import 'package:app_shop/provider/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/product_detail_screen.dart';
 import '../provider/product.dart';
+import '../provider/cart.dart';
+import '../provider/auth.dart';
 import '../provider/cart.dart';
 
 class ProductItem extends StatelessWidget {
@@ -85,9 +86,11 @@ class ConsumerProductFavorite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authData = Provider.of<Auth>(context, listen: false);
     return Consumer<Product>(
       builder: (ctx, product, child) => IconButton(
-        onPressed: () => _product.toggleFavoriteStatus(),
+        onPressed: () =>
+            _product.toggleFavoriteStatus(authData.token.toString()),
         icon: Icon(
           _product.isFavorite ? Icons.favorite : Icons.favorite_border,
           color:

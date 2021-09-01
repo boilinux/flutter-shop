@@ -24,18 +24,20 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
+  String authToken;
   List<OrderItem> _orders = [];
+
+  Orders(this.authToken, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
-  var _headers = {
-    HttpHeaders.authorizationHeader: Auth().token!,
-    HttpHeaders.contentTypeHeader: 'application/json',
-  };
-
   Future<void> fetchAndSetOrders() async {
+    var _headers = {
+      HttpHeaders.authorizationHeader: authToken,
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
     final url = Uri.parse("https://api01.stephenwenceslao.com/api/order");
     final response = await http.get(url, headers: _headers);
     final List<OrderItem> loadedOrders = [];
@@ -61,6 +63,10 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+    var _headers = {
+      HttpHeaders.authorizationHeader: authToken,
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
     final url = Uri.parse("https://api01.stephenwenceslao.com/api/order");
     final timestamp = DateTime.now();
     try {
