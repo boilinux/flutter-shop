@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'product.dart';
@@ -12,8 +13,9 @@ import 'auth.dart';
 class ProductsProvider with ChangeNotifier {
   List<Product> _items = [];
   final String authToken;
+  final data;
 
-  ProductsProvider(this.authToken, this._items);
+  ProductsProvider(this.authToken, this._items, this.data);
 
   // var _showFavoritesOnly = false;
 
@@ -58,16 +60,26 @@ class ProductsProvider with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
-      // inspect(extractedData);
+
+      var user_id = data['user_id'];
+      final url2 = Uri.parse(
+          "https://api01.stephenwenceslao.com/api/v1/product/favorites/$user_id");
+      final response2 = await http.get(url2, headers: _headers);
+
+      final extractedData2 =
+          json.decode(response2.body) as Map<String, dynamic>;
+
       extractedData.forEach((value) {
-        inspect(value);
         loadedProducts!.add(Product(
           id: value['id'].toString(),
           title: value['title'],
           description: value['description'],
           price: double.parse(value['price']),
           imageUrl: value['imageUrl'],
-          isFavorite: false,
+          isFavorite: (extractedData2['data'] as List).firstWhere((element) {
+                return element['Product'] == value['id'];
+              })['isfavorite'] ??
+              false,
         ));
       });
       _items = loadedProducts!;

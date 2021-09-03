@@ -38,13 +38,14 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
     try {
+      var user_id = data!['user_id'];
       final url = Uri.parse(
-          "https://api01.stephenwenceslao.com/api/v1/product/favorites");
+          "https://api01.stephenwenceslao.com/api/v1/product/favorites/$user_id");
       final response = await http.put(
         url,
         headers: _headers,
         body: json.encode({
-          'Account': data!['user_id'],
+          'Account': user_id,
           'Product': data!['product_id'],
           'isfavorite': isFavorite,
         }),
@@ -52,6 +53,7 @@ class Product with ChangeNotifier {
       if (response.statusCode > 400) {
         _setFavValue(oldStatus);
       }
+      inspect(data);
       inspect(response);
     } catch (error) {
       _setFavValue(oldStatus);
