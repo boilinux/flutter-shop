@@ -61,26 +61,34 @@ class ProductsProvider with ChangeNotifier {
         return;
       }
 
-      var user_id = data['user_id'];
+      var userId = data['user_id'];
       final url2 = Uri.parse(
-          "https://api01.stephenwenceslao.com/api/v1/product/favorites/$user_id");
+          "https://api01.stephenwenceslao.com/api/v1/product/favorites/$userId");
       final response2 = await http.get(url2, headers: _headers);
 
       final extractedData2 =
           json.decode(response2.body) as Map<String, dynamic>;
 
       extractedData.forEach((value) {
-        loadedProducts!.add(Product(
-          id: value['id'].toString(),
-          title: value['title'],
-          description: value['description'],
-          price: double.parse(value['price']),
-          imageUrl: value['imageUrl'],
-          isFavorite: (extractedData2['data'] as List).firstWhere((element) {
-                return element['Product'] == value['id'];
-              })['isfavorite'] ??
-              false,
-        ));
+        bool isfav;
+        try {
+          isfav = (extractedData2['data'] as List).firstWhere((element) {
+            return element['Product'] == value['id'];
+          })['isfavorite'] as bool;
+        } catch (error) {
+          isfav = false;
+        }
+        loadedProducts!.add(
+          Product(
+            id: value['id'].toString(),
+            title: value['title'],
+            description: value['description'],
+            price: double.parse(value['price']),
+            imageUrl: value['imageUrl'],
+            // isFavorite: false
+            isFavorite: isfav,
+          ),
+        );
       });
       _items = loadedProducts!;
       notifyListeners();

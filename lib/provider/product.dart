@@ -38,14 +38,14 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
     try {
-      var user_id = data!['user_id'];
+      var userId = data!['user_id'];
       final url = Uri.parse(
-          "https://api01.stephenwenceslao.com/api/v1/product/favorites/$user_id");
+          "https://api01.stephenwenceslao.com/api/v1/product/favorites/$userId");
       final response = await http.put(
         url,
         headers: _headers,
         body: json.encode({
-          'Account': user_id,
+          'Account': userId,
           'Product': data!['product_id'],
           'isfavorite': isFavorite,
         }),
