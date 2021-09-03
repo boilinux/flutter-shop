@@ -67,7 +67,7 @@ class Orders with ChangeNotifier {
       HttpHeaders.authorizationHeader: authToken,
       HttpHeaders.contentTypeHeader: 'application/json',
     };
-    final url = Uri.parse("https://api01.stephenwenceslao.com/api/order");
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/v1/order");
     final timestamp = DateTime.now();
     try {
       final response = await http.post(
