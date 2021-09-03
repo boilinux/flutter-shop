@@ -38,7 +38,7 @@ class Orders with ChangeNotifier {
       HttpHeaders.authorizationHeader: authToken,
       HttpHeaders.contentTypeHeader: 'application/json',
     };
-    final url = Uri.parse("https://api01.stephenwenceslao.com/api/order");
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/v1/order");
     final response = await http.get(url, headers: _headers);
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as List;

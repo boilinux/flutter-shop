@@ -48,7 +48,7 @@ class ProductsProvider with ChangeNotifier {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
     print(authToken);
-    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/v1/product");
     try {
       final response = await http.get(url, headers: _headers);
       final extractedData = json.decode(response.body) as List;
@@ -67,7 +67,7 @@ class ProductsProvider with ChangeNotifier {
           description: value['description'],
           price: double.parse(value['price']),
           imageUrl: value['imageUrl'],
-          isFavorite: value['isfavorite'],
+          isFavorite: false,
         ));
       });
       _items = loadedProducts!;
@@ -82,7 +82,7 @@ class ProductsProvider with ChangeNotifier {
       HttpHeaders.authorizationHeader: authToken,
       HttpHeaders.contentTypeHeader: 'application/json',
     };
-    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product");
+    final url = Uri.parse("https://api01.stephenwenceslao.com/api/v1/product");
     try {
       final response = await http.post(
         url,
@@ -92,7 +92,6 @@ class ProductsProvider with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
 
@@ -120,7 +119,7 @@ class ProductsProvider with ChangeNotifier {
     final prodIndex = _items.indexWhere((element) => element.id == id);
     if (prodIndex >= 0) {
       final url =
-          Uri.parse("https://api01.stephenwenceslao.com/api/product/$id");
+          Uri.parse("https://api01.stephenwenceslao.com/api/v1/product/$id");
       await http.put(
         url,
         headers: _headers,
@@ -141,7 +140,8 @@ class ProductsProvider with ChangeNotifier {
       HttpHeaders.authorizationHeader: authToken,
       HttpHeaders.contentTypeHeader: 'application/json',
     };
-    final url = Uri.parse("https://api01.stephenwenceslao.com/api/product/$id");
+    final url =
+        Uri.parse("https://api01.stephenwenceslao.com/api/v1/product/$id");
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
     final existingProduct = _items[existingProductIndex];

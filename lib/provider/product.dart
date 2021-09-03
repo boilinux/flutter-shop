@@ -29,7 +29,7 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus(String token) async {
+  Future<void> toggleFavoriteStatus(String token, var data) async {
     var _headers = {
       HttpHeaders.authorizationHeader: token,
       HttpHeaders.contentTypeHeader: 'application/json',
@@ -38,12 +38,14 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
     try {
-      final url =
-          Uri.parse("https://api01.stephenwenceslao.com/api/product/$id");
+      final url = Uri.parse(
+          "https://api01.stephenwenceslao.com/api/v1/product/favorites");
       final response = await http.put(
         url,
         headers: _headers,
         body: json.encode({
+          'Account': data!['user_id'],
+          'Product': data!['product_id'],
           'isfavorite': isFavorite,
         }),
       );

@@ -17,6 +17,14 @@ class Auth with ChangeNotifier {
     HttpHeaders.contentTypeHeader: 'application/json',
   };
 
+  String? get userId {
+    if (_userId != null) {
+      return _userId;
+    }
+
+    return null;
+  }
+
   bool get isAuth {
     return token != null;
   }
@@ -31,7 +39,7 @@ class Auth with ChangeNotifier {
 
   Future<void> signup(var data) async {
     final url =
-        Uri.parse("https://api01.stephenwenceslao.com/api/account/register");
+        Uri.parse("https://api01.stephenwenceslao.com/api/v1/account/register");
     try {
       final response = await http.post(
         url,
@@ -64,7 +72,7 @@ class Auth with ChangeNotifier {
 
   Future<void> login(var data) async {
     final url =
-        Uri.parse("https://api01.stephenwenceslao.com/api/account/login");
+        Uri.parse("https://api01.stephenwenceslao.com/api/v1/account/login");
     try {
       final response = await http.post(
         url,
