@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
 import '../models/http_exception.dart';
 
 class Auth with ChangeNotifier {
@@ -11,7 +13,7 @@ class Auth with ChangeNotifier {
   // ignore: unused_field
   late DateTime _expiryDate;
   // ignore: unused_field
-  late String _userId;
+  String? _userId;
 
   var _headers = {
     HttpHeaders.contentTypeHeader: 'application/json',
@@ -65,6 +67,10 @@ class Auth with ChangeNotifier {
       _token = responseData['token'];
       _userId = responseData['pk'].toString();
       notifyListeners();
+
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({'token': _token, 'userId': _userId});
+      prefs.setString('userData', userData);
     } catch (error) {
       throw error;
     }
@@ -83,8 +89,6 @@ class Auth with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
-      // inspect(responseData);
-      // inspect(responseData['user_info']);
       if (responseData['error'] != null) {
         throw HttpException(responseData['error'].toString());
       }
@@ -92,8 +96,42 @@ class Auth with ChangeNotifier {
       _userId = responseData['user_info']['id'].toString();
       // inspect(_token);
       notifyListeners();
+
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({'token': _token, 'userId': _userId});
+      prefs.setString('userData', userData);
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      if (!prefs.containsKey('userData')) {
+        return false;
+      }
+
+      final extractedUserData =
+          json.decode(prefs.getString('userData').toString())
+              as Map<String, dynamic>;
+
+      _token = extractedUserData['token'];
+      _userId = extractedUserData['userId'];
+      notifyListeners();
+      return true;
+    } catch (error) {
+      inspect(error);
+      return false;
+    }
+  }
+
+  Future<void> logout() async {
+    _token = null;
+    _userId = null;
+    notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }

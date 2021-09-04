@@ -49,7 +49,7 @@ class ProductsProvider with ChangeNotifier {
       HttpHeaders.authorizationHeader: authToken,
       HttpHeaders.contentTypeHeader: 'application/json',
     };
-    print(authToken);
+    print("TOKEN:" + authToken);
     final url = Uri.parse("https://api01.stephenwenceslao.com/api/v1/product");
     try {
       final response = await http.get(url, headers: _headers);

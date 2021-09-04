@@ -11,6 +11,7 @@ import './screens/orders_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
 import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
 import './provider/auth.dart';
 
 void main() {
@@ -60,7 +61,15 @@ class MyApp extends StatelessWidget {
               if (auth.isAuth) {
                 homepage = ProductOverviewScreen();
               } else {
-                homepage = AuthScreen();
+                homepage = FutureBuilder(
+                  builder: (ctx, authResultSnapshot) {
+                    return authResultSnapshot.connectionState ==
+                            ConnectionState.waiting
+                        ? SplashScreen()
+                        : AuthScreen();
+                  },
+                  future: auth.tryAutoLogin(),
+                );
               }
 
               return homepage;
